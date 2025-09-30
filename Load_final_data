@@ -1,0 +1,7 @@
+import pandas as pd
+
+# Load the final saved dataset
+df_final = pd.read_csv("Final_IT_Ticket_Output.csv")
+print(" Final dataset loaded")
+print(df_final.shape)
+df_final.head()
