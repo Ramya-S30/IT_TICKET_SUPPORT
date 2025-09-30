@@ -1,0 +1,3 @@
+cluster_summary = df_final.groupby('Cluster')[['Max Day', 'Predicted_Max_Day']].mean()
+print(" Average Resolution Time per Cluster:")
+print(cluster_summary)
