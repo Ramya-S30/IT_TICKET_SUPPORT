@@ -1,0 +1,3 @@
+# Save dataset with predictions & clusters
+df.to_csv("Final_IT_Ticket_Output.csv", index=False)
+print("Final dataset saved as 'Final_IT_Ticket_Output.csv'")
