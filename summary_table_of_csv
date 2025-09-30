@@ -1,0 +1,7 @@
+cluster_summary.to_csv("Cluster_Summary.csv")
+if 'Priority' in df_final.columns:
+    priority_summary.to_csv("Priority_Summary.csv")
+if 'TicketType' in df_final.columns:
+    ticket_type_cluster.to_csv("TicketType_Cluster_Summary.csv")
+
+print(" Summary tables saved as CSVs")
