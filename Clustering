@@ -1,0 +1,46 @@
+
+# =========================
+# Step 3: Clustering (K-Means)
+# =========================
+
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 1 Load dataset with predictions
+df = pd.read_csv('IT_Ticket_Dataset.csv')
+print("Dataset Loaded. Shape:", df.shape)
+
+# 2 Select features for clustering
+# You can use features + predicted resolution time
+cluster_features = ['FiledAgainst', 'TicketType', 'Severity', 'Priority', 'Predicted_Max_Day']
+
+X = df[cluster_features]
+
+# 3 Standardize features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# 4 Apply K-Means Clustering
+# Choose number of clusters (e.g., k=3)
+k = 3
+kmeans = KMeans(n_clusters=k, random_state=42)
+df['Cluster'] = kmeans.fit_predict(X_scaled)
+
+# 5 Optional: Visualize Cluster Centers (using first 2 features)
+plt.figure(figsize=(6,4))
+sns.scatterplot(x=X_scaled[:,0], y=X_scaled[:,1], hue=df['Cluster'], palette='Set2')
+plt.title("K-Means Clustering of Tickets (Scaled Features)")
+plt.xlabel(cluster_features[0])
+plt.ylabel(cluster_features[1])
+plt.show()
+
+# 6 Save dataset with cluster labels
+df.to_csv('IT_Ticket_Dataset.csv', index=False)
+print(" Dataset with cluster labels saved as 'IT_Ticket_Dataset.csv'")
+
+# 7Check cluster distribution
+print("\nTicket Count per Cluster:")
+print(df['Cluster'].value_counts())
