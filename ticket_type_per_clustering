@@ -1,0 +1,4 @@
+if 'TicketType' in df_final.columns:
+    ticket_type_cluster = df_final.groupby(['TicketType', 'Cluster']).size().unstack(fill_value=0)
+    print("\n Ticket Type Distribution per Cluster:")
+    print(ticket_type_cluster)
