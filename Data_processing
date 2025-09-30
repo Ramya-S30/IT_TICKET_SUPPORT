@@ -1,0 +1,45 @@
+# =========================
+# Step 1: Data Preparation
+# =========================
+
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+ect_dtypes(include=['int64', 'float64']).columns
+df[numeric_cols] = df
+# 1 Load Raw Dataset
+# Replace with your dataset path
+df = pd.read_csv('IT_Ticket_Dataset.csv')
+print("Raw Dataset Loaded. Shape:", df.shape)
+print(df.head())
+
+# 2 Handle Missing Values
+# Check for missing values
+print("\nMissing values per column:")
+print(df.isnull().sum())
+
+# Option A: Fill missing numeric columns with median
+numeric_cols = df.sel[numeric_cols].fillna(df[numeric_cols].median())
+
+# Option B: Fill missing categorical columns with mode
+categorical_cols = df.select_dtypes(include=['object']).columns
+for col in categorical_cols:
+    df[col] = df[col].fillna(df[col].mode()[0])
+
+print("\nMissing values after handling:")
+print(df.isnull().sum())
+
+# 3 Encode Categorical Columns
+label_encoders = {}
+for col in categorical_cols:
+    le = LabelEncoder()
+    df[col] = le.fit_transform(df[col].astype(str))
+    label_encoders[col] = le
+
+print("\nDataset after encoding:")
+print(df.head())
+print("\nColumn Data Types:")
+print(df.dtypes)
+
+# 4 Save the Processed Dataset
+df.to_csv('IT_Ticket_Dataset.csv', index=False)
+print("\n Processed dataset saved as 'IT_Ticket_Dataset.csv'")
