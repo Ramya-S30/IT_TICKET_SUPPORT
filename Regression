@@ -1,0 +1,43 @@
+# =========================
+# Step 2: Regression Model
+# =========================
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+import numpy as np
+
+# 1 Load Processed Dataset
+df = pd.read_csv('IT_Ticket_Dataset.csv')
+print("IT_Ticket_Dataset. Shape:", df.shape)
+
+# 2 Select Features & Target
+# Assuming categorical columns are already encoded
+feature_cols = ['FiledAgainst', 'TicketType', 'Severity', 'Priority']
+X = df[feature_cols]
+y = df['Max Day']  # Target: resolution time in days
+
+# 3 Split into Train/Test
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# 4 Train Random Forest Regressor
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# 5 Make Predictions
+y_pred = model.predict(X_test)
+
+# 6 Evaluate Model
+mae = mean_absolute_error(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+print(f"Model Evaluation:\nMAE: {mae:.2f}, RMSE: {rmse:.2f}")
+
+# 7 Add Predictions to Full Dataset
+df['Predicted_Max_Day'] = model.predict(X)
+
+# 8 Save Dataset with Predictions
+df.to_csv('IT_Ticket_Dataset.csv', index=False)
+print(" Dataset with predictions saved as 'IT_Ticket_Dataset.csv'")
