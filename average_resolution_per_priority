@@ -1,0 +1,4 @@
+if 'Priority' in df_final.columns:
+    priority_summary = df_final.groupby('Priority')[['Max Day', 'Predicted_Max_Day']].mean()
+    print("\n Average Resolution Time per Priority:")
+    print(priority_summary)
