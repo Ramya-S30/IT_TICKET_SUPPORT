@@ -1,0 +1,59 @@
+# ===============================
+# Step 4: Visualizations - All 6 Graphs
+# ===============================
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load final dataset
+df = pd.read_csv('IT_Ticket_Dataset.csv')
+print("IT_Ticket_Dataset. Shape:", df.shape)
+
+# Set Seaborn style
+sns.set(style="whitegrid")
+
+# 1 Actual vs Predicted Resolution Time (Histogram)
+plt.figure(figsize=(8,5))
+sns.histplot(df['Max Day'], bins=20, kde=True, color='blue', label='Actual')
+sns.histplot(df['Predicted_Max_Day'], bins=20, kde=True, color='red', label='Predicted')
+plt.title('Actual vs Predicted Resolution Time')
+plt.xlabel('Days')
+plt.legend()
+plt.show()
+
+# 2 Cluster Distribution (Countplot)
+plt.figure(figsize=(6,4))
+sns.countplot(x='Cluster', data=df, palette='Set2')
+plt.title('Ticket Cluster Distribution')
+plt.show()
+
+# 3 Average Resolution Time per Cluster (Barplot)
+cluster_avg = df.groupby('Cluster')['Max Day'].mean().reset_index()
+plt.figure(figsize=(6,4))
+sns.barplot(x='Cluster', y='Max Day', data=cluster_avg, palette='Set3')
+plt.title('Average Resolution Time per Cluster')
+plt.show()
+
+# 4 Ticket Type Distribution per Cluster (Countplot)
+plt.figure(figsize=(8,5))
+sns.countplot(x='TicketType', hue='Cluster', data=df, palette='Set2')
+plt.title('Ticket Type Distribution per Cluster')
+plt.show()
+
+# 5 Average Resolution Time per Priority (Barplot)
+priority_avg = df.groupby('Priority')['Max Day'].mean().reset_index()
+plt.figure(figsize=(6,4))
+sns.barplot(x='Priority', y='Max Day', data=priority_avg, palette='Set1')
+plt.title('Average Resolution Time per Priority')
+plt.show()
+
+# 6 Predicted vs Actual Scatter Plot (with Cluster hue)
+plt.figure(figsize=(8,5))
+sns.scatterplot(x='Max Day', y='Predicted_Max_Day', hue='Cluster', palette='Set2', data=df)
+plt.plot([df['Max Day'].min(), df['Max Day'].max()],
+         [df['Max Day'].min(), df['Max Day'].max()], 'r--')
+plt.xlabel('Actual Max Day')
+plt.ylabel('Predicted Max Day')
+plt.title('Predicted vs Actual Resolution Time')
+plt.show()
