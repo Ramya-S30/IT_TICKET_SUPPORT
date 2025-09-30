@@ -1,0 +1,3 @@
+cluster_count = df_final['Cluster'].value_counts()
+print("\n Number of Tickets per Cluster:")
+print(cluster_count)
