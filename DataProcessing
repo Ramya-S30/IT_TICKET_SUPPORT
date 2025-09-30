@@ -1,0 +1,79 @@
+# ===============================
+# 📌 IT Ticket Dataset - Data Preprocessing
+# ===============================
+
+# 1 Import Libraries
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
+
+# 2 Load Dataset
+# Replace with the correct file path if your dataset is in another folder
+data = pd.read_csv("IT_Ticket_Dataset.csv")
+
+# Display first few rows
+print("🔸 Initial Data Sample:")
+print(data.head())
+print("\n🔸 Data Info:")
+print(data.info())
+
+# 3 Check for Missing Values
+print("\n🔸 Missing Values Before Processing:")
+print(data.isnull().sum())
+
+# 4 Fill or Drop Missing Values
+# Strategy depends on your dataset — here we use simple fill for demonstration
+data = data.fillna({
+    'TicketType': 'Unknown',
+    'Severity': 'Medium',
+    'Priority': 'Normal',
+    'Max Day': data['Max Day'].median()
+})
+
+# Optional: Drop any remaining rows with nulls
+data = data.dropna()
+
+print("\n🔸 Missing Values After Processing:")
+print(data.isnull().sum())
+
+# 5 Encode Categorical Variables
+# Identify columns that are categorical
+categorical_cols = data.select_dtypes(include=['object']).columns
+print(f"\n🔸 Categorical Columns Detected: {list(categorical_cols)}")
+
+# Use LabelEncoder for each categorical column
+label_encoders = {}
+for col in categorical_cols:
+    le = LabelEncoder()
+    data[col] = le.fit_transform(data[col])
+    label_encoders[col] = le
+    print(f" Encoded Column: {col}")
+
+# 6 Convert Date Columns (if any)
+# If you have columns like 'CreatedDate' or 'ResolvedDate', convert them to datetime
+# Example:
+# data['CreatedDate'] = pd.to_datetime(data['CreatedDate'])
+# data['ResolvedDate'] = pd.to_datetime(data['ResolvedDate'])
+# data['Resolution_Time'] = (data['ResolvedDate'] - data['CreatedDate']).dt.days
+
+# 7 Remove Duplicates
+initial_shape = data.shape
+data = data.drop_duplicates()
+final_shape = data.shape
+print(f"\n🔸 Removed {initial_shape[0] - final_shape[0]} duplicate rows")
+
+# 8 Outlier Handling (Optional)
+# Example: Cap 'Max Day' to 95th percentile to handle extreme outliers
+q95 = data['Max Day'].quantile(0.95)
+data['Max Day'] = np.where(data['Max Day'] > q95, q95, data['Max Day'])
+
+# 9 Final Check
+print("\n🔸 Final Data Info:")
+print(data.info())
+print("\n🔸 Final Sample:")
+print(data.head())
+
+# Save the Preprocessed Data
+data.to_csv("processed_data.csv", index=False)
+print("\n Data preprocessing complete. Saved as 'processed_data.csv'")
+
